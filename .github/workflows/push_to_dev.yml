@@ -1,0 +1,9 @@
+name: GitHub Actions Push to DEV
+run-name: Env is ${{ github.env }}, event_name is ${{ github.event_name }}, head_ref is ${{ github.head_ref }}
+on:
+  push:
+    branches:
+      - 'dev'
+    paths:
+      - 'python/*'
+
