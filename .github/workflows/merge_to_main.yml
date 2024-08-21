@@ -3,14 +3,14 @@
 
 #  https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#github-context  
 
-name: Create the PR for the dependent projects
+name: Automatically create PR for dependent projects
 run-name: The ${{github.ref}}
 on:
-  pull_request:
+  pull_request_target:
     # https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request
     types: closed
-    #branches:
-    #  - master
+    branches:
+      - master
     #paths-ignore:
     #  - 'dags/**'
       
@@ -31,8 +31,16 @@ jobs:
           echo "The PR target is $TARGET"
                   
       - name: Checkout code
-        if: github.event.pull_request.merged == true &&  github.event.pull_request.base.ref== 'master' # && github.event.pull_request.head.ref == 'dev'    
-        uses: actions/checkout@v2
-
-      - name: Print Merge Message
-        run: echo "Changes from the dev branch have been merged into master!"
+        if: github.event.pull_request.merged == true &&  github.event.pull_request.base.ref== 'main' # && github.event.pull_request.head.ref == 'dev'    
+        uses: actions/checkout@v4
+      - name: Setup Git config
+        run: |
+          git config --global user.email "your-email@example.com"
+          git config --global user.name "Your GitHub Username"
+      
+      - name: Push Changes and Create PR to Repo2
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: "dev" 
+          destination_repository: "https://github.com/SavitskayaYlia/ci-cd-template.git" 
+          github_token: ${{ secrets.REPO_TOKEN_PR }}
