@@ -6,7 +6,6 @@ class Greeting:
     def print_message(self):
         print(f"{self.greeting}, {self.name}!!!!!!!")
 
-
 if __name__ == "__main__":
     import sys
     if len(sys.argv) != 3:
