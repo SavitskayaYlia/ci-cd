@@ -24,6 +24,11 @@ jobs:
       SOURCE: ${{ github.event.pull_request.head.ref }}
       TARGET: ${{ github.event.pull_request.base.ref }}
     steps:      
+      - id: check_condition
+          run: |
+            echo "condition_met=true" >> $GITHUB_ENV
+          if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+
       - name: Common information  
         run: |
           echo "The PR is $PR"
@@ -31,14 +36,11 @@ jobs:
           echo "The PR target is $TARGET"
                   
       - name: Checkout code
-        if: github.event.pull_request.merged == true &&  github.event.pull_request.base.ref== 'main' # && github.event.pull_request.head.ref == 'dev'    
+        if: env.condition_met == 'true'        
         uses: actions/checkout@v4
-      - name: Setup Git config
-        run: |
-          git config --global user.email "your-email@example.com"
-          git config --global user.name "Your GitHub Username"
       
       - name: Push Changes and Create PR to Repo2
+        if: env.condition_met == 'true'
         uses: repo-sync/pull-request@v2
         with:
           destination_branch: "dev" 
