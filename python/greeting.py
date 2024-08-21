@@ -16,3 +16,4 @@ if __name__ == "__main__":
     greeting = sys.argv[2]
     greeting_instance = Greeting(name, greeting)
     greeting_instance.print_message()
+    
