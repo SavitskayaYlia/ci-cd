@@ -25,9 +25,9 @@ jobs:
       TARGET: ${{ github.event.pull_request.base.ref }}
     steps:      
       - id: check_condition
-          run: |
+        run: |
             echo "condition_met=true" >> $GITHUB_ENV
-          if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+        if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
 
       - name: Common information  
         run: |
