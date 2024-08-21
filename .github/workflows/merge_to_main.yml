@@ -7,16 +7,30 @@ name: Create the PR for the dependent projects
 run-name: The {{github.ref}}
 on:
   pull_request:
-    types: [closed]
-    branches:
-      - master
+    # https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request
+    types: closed
+    #branches:
+    #  - master
+    #paths-ignore:
+    #  - 'dags/**'
       
 jobs:
   merge_pr:
     name: Create the PR for the dependent projects 
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'master' # && github.event.pull_request.head.ref == 'dev'    
+    if: github.event.pull_request.merged == true &&  github.event.pull_request.base.ref== 'master' # && github.event.pull_request.head.ref == 'dev'    
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PR: ${{ github.event.pull_request.html_url }}
+      SOURCE: ${{ github.event.pull_request.head.ref }}
+      TARGET: ${{ github.event.pull_request.base.ref }}
     steps:
+      - name: Common information  
+        run: |
+          echo "The PR is $PR"
+          echo "The PR source is $SOURCE"
+          echo "The PR target is $TARGET"
+                  
       - name: Checkout code
         uses: actions/checkout@v2
 
