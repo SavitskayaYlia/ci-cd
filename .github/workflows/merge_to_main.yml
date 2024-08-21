@@ -1,18 +1,8 @@
-# syntax 
-#  https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#jobsjob_idsteps
-
-#  https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#github-context  
-
 name: Automatically create PR for dependent projects
 run-name: The ${{github.ref}}
 on:
   pull_request_target:
-    # https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request
-    types: closed
-    #branches:
-    #  - master
-    #paths-ignore:
-    #  - 'dags/**'
+    types: closed # Trigger when a PR is closed
       
 jobs:
   merge_pr:
@@ -25,18 +15,18 @@ jobs:
       TARGET: ${{ github.event.pull_request.base.ref }}
     steps:      
       - id: check_condition
-          run: |
-            echo "condition_met=true" >> $GITHUB_ENV
-          if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+        run: echo "condition_met=true" >> $GITHUB_ENV
+        if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
 
       - name: Common information  
         run: |
           echo "The PR is $PR"
           echo "The PR source is $SOURCE"
           echo "The PR target is $TARGET"
-                  
+        if: env.condition_met == 'true' # Ensures that this step will run only if the condition from previous step is met
+
       - name: Checkout code
-        if: env.condition_met == 'true'        
+        if: env.condition_met == 'true'
         uses: actions/checkout@v4
       
       - name: Push Changes and Create PR to Repo2
@@ -44,4 +34,4 @@ jobs:
         uses: repo-sync/pull-request@v2
         with:
           destination_branch: "dev" 
-          destination_repository: "https://github.com/SavitskayaYlia/ci-cd-template.git" 
+          destination_repository: "https://github.com/SavitskayaYlia/ci-cd-template.git"
