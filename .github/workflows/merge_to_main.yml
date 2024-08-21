@@ -44,4 +44,4 @@ jobs:
         uses: repo-sync/pull-request@v2
         with:
           destination_branch: "dev" 
-          destination_repository: "https://github.com/SavitskayaYlia/ci-cd-template.git"
+          destination_repository: "git@github.com:SavitskayaYlia/ci-cd-template.git"
