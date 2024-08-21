@@ -4,7 +4,7 @@
 #  https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#github-context  
 
 name: Create the PR for the dependent projects
-run-name: The {{github.ref}}
+run-name: The ${{github.ref}}
 on:
   pull_request:
     # https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request
