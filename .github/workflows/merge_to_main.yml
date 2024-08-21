@@ -8,7 +8,7 @@ run-name: The ${{github.ref}}
 on:
   pull_request_target:
     # https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request
-    types: closed
+    types: closed # Trigger when a PR is closed
     #branches:
     #  - master
     #paths-ignore:
@@ -33,10 +33,10 @@ jobs:
         run: |
           echo "The PR is $PR"
           echo "The PR source is $SOURCE"
-          echo "The PR target is $TARGET"
-                  
+          echo "The PR target is $TARGET"        
+
       - name: Checkout code
-        if: env.condition_met == 'true'        
+        if: env.condition_met == 'true'
         uses: actions/checkout@v4
       
       - name: Push Changes and Create PR to Repo2
@@ -44,4 +44,4 @@ jobs:
         uses: repo-sync/pull-request@v2
         with:
           destination_branch: "dev" 
-          destination_repository: "https://github.com/SavitskayaYlia/ci-cd-template.git" 
+          destination_repository: "https://github.com/SavitskayaYlia/ci-cd-template.git"
