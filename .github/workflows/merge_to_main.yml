@@ -9,8 +9,8 @@ on:
   pull_request_target:
     # https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request
     types: closed
-    branches:
-      - master
+    #branches:
+    #  - master
     #paths-ignore:
     #  - 'dags/**'
       
