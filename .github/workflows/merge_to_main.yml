@@ -1,0 +1,24 @@
+# syntax 
+#  https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#jobsjob_idsteps
+
+#  https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#github-context  
+
+name: Create the PR for the dependent projects
+run-name: The {{github.ref}}
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+      
+jobs:
+  merge_pr:
+    name: Create the PR for the dependent projects 
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'master' # && github.event.pull_request.head.ref == 'dev'    
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Print Merge Message
+        run: echo "Changes from the dev branch have been merged into master!"
