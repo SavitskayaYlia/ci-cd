@@ -1,11 +1,8 @@
 dependents:
-  - "ci-cd-depended"
-  - "ci-cd-depended2"
+  - "ci-cd-*"
 
 additional:  
-  - "ci-cd-depended"
-  - "ci-cd-depended2"
-  - "ci-cd-privat"
-
+  - "ci-cd-*"
+  
 files:
   - "*"
