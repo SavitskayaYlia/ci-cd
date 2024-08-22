@@ -1,7 +1,10 @@
 dependents:
+  - "ci-cd-depended"
   - "ci-cd-depended2"
-  - "SavitskayaYlia/ci-cd-depended"
 
 additional:  
   - "ci-cd-depended"
   - "ci-cd-depended2"
+
+files:
+  - "*"
