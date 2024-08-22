@@ -52,7 +52,7 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GH_TOKEN }}  # Ensure this token has repo scope
-          branch: sync-branch        # Branch that the changes were synced to
+          branch: main       # Branch that the changes were synced to
           base: main                 # Base branch to merge the changes
           title: 'Update from Template'
           body: 'This PR synchronizes the latest template changes.'
