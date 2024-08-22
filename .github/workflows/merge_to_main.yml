@@ -44,4 +44,5 @@ jobs:
         uses: ahmadnassri/action-template-repository-sync@v2
         with:
           github-token: ${{ secrets.REPO_TOKEN }}
+          config: .github/merge_to_main_conf.yml
           dry-run: true
