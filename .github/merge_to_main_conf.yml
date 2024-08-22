@@ -2,7 +2,7 @@ version: 2
 repositories:
   - source: SavitskayaYlia/ci-cd
     targets:
-      - SavitskayaYlia/ci-cd-depended
+      - ci-cd-depended
       - SavitskayaYlia/ci-cd-depended2
 ignore:
   - .gitignore
