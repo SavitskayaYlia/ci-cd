@@ -43,5 +43,5 @@ jobs:
         if: env.condition_met == 'true'
         uses: ahmadnassri/action-template-repository-sync@v2
         with:
-          github-token: ${{ secrets.REPO_TOKEN_D2 }}
+          github-token: ${{ secrets.REPO_TOKEN }}
           dry-run: true
