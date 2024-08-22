@@ -6,7 +6,7 @@
 name: Automatically create PR for dependent projects
 run-name: The ${{ github.event.pull_request.html_url }} 
 on:
-  pull_request_target:
+  pull_request:
     # https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request
     types: closed # Trigger when a PR is closed
     #branches:
