@@ -46,3 +46,4 @@ jobs:
           github-token: ${{ secrets.REPO_TOKEN }}
           config: .github/merge_to_main_conf.yml
           #dry-run: false
+          skip-ci: true
