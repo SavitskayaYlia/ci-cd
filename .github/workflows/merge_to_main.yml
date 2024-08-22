@@ -19,7 +19,7 @@ jobs:
     name: Create the PR for the dependent projects 
     runs-on: ubuntu-latest          
     env:
-      GITHUB_TOKEN: ${{ secrets.REPO_TOKEN_PR }}
+      #GITHUB_TOKEN: ${{ secrets.REPO_TOKEN_PR }}
       PR: ${{ github.event.pull_request.html_url }}
       SOURCE: ${{ github.event.pull_request.head.ref }}
       TARGET: ${{ github.event.pull_request.base.ref }}
@@ -43,5 +43,5 @@ jobs:
         if: env.condition_met == 'true'
         uses: ahmadnassri/action-template-repository-sync@v2
         with:
-          github-token: ${{ secrets.REPO_TOKEN_PR }}
+          github-token: ${{ secrets.REPO_TOKEN_D2 }}
           dry-run: true
