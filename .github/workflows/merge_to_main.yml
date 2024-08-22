@@ -43,7 +43,7 @@ jobs:
         if: env.condition_met == 'true'
         uses: ahmadnassri/action-template-repository-sync@v2
         with:
-          github-token: ${{ secrets.REPO_TOKEN }}
+          github-token: ${{ secrets.TOKEN_BETA }} #REPO_TOKEN
           config: .github/merge_to_main_conf.yml
           #dry-run: false
-          skip-ci: true
+          #skip-ci: true
