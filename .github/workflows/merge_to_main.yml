@@ -41,7 +41,7 @@ jobs:
       
       - name: Push Changes and Create PR to Repo2
         if: env.condition_met == 'true'
-        uses: repo-sync/pull-request@v2
+        uses: ahmadnassri/action-template-repository-sync@v2
         with:
-          destination_branch: "dev" 
-          destination_repository: "SavitskayaYlia/ci-cd-template"
+          github-token: ${{ secrets.REPO_TOKEN_PR }}
+          dry-run: true
