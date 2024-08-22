@@ -1,9 +1,7 @@
-version: 2
-repositories:
-  - source: ci-cd
-    targets:
-      - ci-cd-depended
-      - SavitskayaYlia/ci-cd-depended2
-ignore:
-  - .gitignore
-  - README.md
+dependents:
+  - "ci-cd-depended2"
+  - "SavitskayaYlia/ci-cd-depended"
+
+additional:  
+  - "ci-cd-depended"
+  - "SavitskayaYlia/ci-cd-depended2"
