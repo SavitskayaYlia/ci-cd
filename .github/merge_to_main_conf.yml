@@ -5,6 +5,7 @@ dependents:
 additional:  
   - "ci-cd-depended"
   - "ci-cd-depended2"
+  - "ci-cd-privat"
 
 files:
   - "*"
