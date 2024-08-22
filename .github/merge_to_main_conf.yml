@@ -1,19 +1,9 @@
-dependents:
-  - "ci-cd-*" # include
-  #- "!lib-*" # exclude
-
-#additional:
-#  - "another-one-*" # include
-#  - "!not-this-*" # exclude
-
-#files:
-#  - ".gitignore" # include
-#  - "!package.json" # exclude
-#  - "!(package-lock.json|yarn.lock)"
-
-  # you probably want to exclude these files:
-#  - "!.github/workflows/template-sync.yml"
-#  - "!.github/template-sync.yml"
-
-  # remap file names at destination repo
-#  - .gitignore-example: .gitignore
+version: 2
+repositories:
+  - source: SavitskayaYlia/ci-cd
+    targets:
+      - SavitskayaYlia/ci-cd-depended
+      - SavitskayaYlia/ci-cd-depended2
+ignore:
+  - .gitignore
+  - README.md
