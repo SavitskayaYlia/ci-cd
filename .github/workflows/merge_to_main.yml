@@ -38,13 +38,21 @@ jobs:
       - name: Checkout code
         if: env.condition_met == 'true'
         uses: actions/checkout@v2 # important!
-      
-      - name: Push Changes and Create PR to Repo2
-        if: env.condition_met == 'true'
-        uses: ahmadnassri/action-template-repository-sync@v1
+
+      - name: Push changes
+        uses: repo-sync/github-sync@v2
         with:
-          github-token: ${{ secrets.GH_TOKEN }}
-          config: .github/merge_to_main_conf.yml
+          source_repo: "SavitskayaYlia/ci-cd"
+          destination_repo: "SavitskayaYlia/ci-cd-depended"
+          github_token: ${{ secrets.GH_TOKEN }}
+
+          
+      #- name: Push Changes and Create PR to Repo2
+      #  if: env.condition_met == 'true'
+      #  uses: ahmadnassri/action-template-repository-sync@v2
+      #  with:
+      #    github-token: ${{ secrets.GH_TOKEN }}
+      #    config: .github/merge_to_main_conf.yml
           #dry-run: false
           #skip-ci: true
       

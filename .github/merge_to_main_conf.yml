@@ -1,10 +1,10 @@
-dependents:
-  - "ci-cd-*"
+#dependents:
+#  - "ci-cd-*"
 
-additional:  
-  - "ci-cd-*"
+#additional:  
+#  - "ci-cd-*"
   
-files:
-  - "!.github/merge_to_main_conf.yml"
+#files:
+#  - "!.github/merge_to_main_conf.yml"
 
           
