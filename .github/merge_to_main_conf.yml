@@ -1,24 +1,10 @@
-#dependents:
-#  - "ci-cd-*"
+dependents:
+  - "ci-cd-*"
 
-#additional:  
-#  - "ci-cd-*"
+additional:  
+  - "ci-cd-*"
   
-#files:
-#  - "README.md"
 
 
-# Configuration for template repository synchronization
-version: "1"
-rules:
-  - description: "Sync main branch of template to development branch of dependents"
-    source:
-      branch: "main"
-    targets:
-      - branch: "development"
-        repos:
-          - "ci-cd-privat2"
-          - "ci-cd-privat"
-          - "ci-cd-depended2"
-          - "ci-cd-depended"
+
           
