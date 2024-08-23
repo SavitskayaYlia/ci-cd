@@ -38,13 +38,19 @@ jobs:
       - name: Checkout code
         if: env.condition_met == 'true'
         uses: actions/checkout@v2 # important!
-
-      - name: Push changes
-        uses: repo-sync/github-sync@v2
+        
+      - name: Push changes 
+        uses: BetaHuhn/repo-file-sync-action@v1
         with:
-          source_repo: "SavitskayaYlia/ci-cd"
-          destination_repo: "SavitskayaYlia/ci-cd-depended"
-          github_token: ${{ secrets.GH_TOKEN }}
+          GH_PAT: ${{ secrets.GH_TOKEN }}
+          CONFIG_PATH: .github/repo-file-sync-action_conf.yml
+
+      #- name: Push changes  # shold be located in depended repo
+      #  uses: repo-sync/github-sync@v2
+      #  with:
+      #    source_repo: "SavitskayaYlia/ci-cd"
+      #    destination_repo: "SavitskayaYlia/ci-cd-depended" # not work
+      #    github_token: ${{ secrets.GH_TOKEN }}
 
           
       #- name: Push Changes and Create PR to Repo2
