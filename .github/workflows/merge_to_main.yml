@@ -4,70 +4,40 @@
 #  https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#github-context  
 
 name: Automatically create PR for dependent projects
-run-name: The ${{ github.event.pull_request.html_url }} 
+run-name: Auto propagation changes of PR ${{ github.event.pull_request.html_url }} 
 on:
   pull_request:
-    # https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request
-    types: closed # Trigger when a PR is closed
-    #branches:
-    #  - master
-    #paths-ignore:
-    #  - 'dags/**'
-      
+    types: closed 
+    
 jobs:
   merge_pr:
     name: Create the PR for the dependent projects 
     runs-on: ubuntu-latest          
     env:
-      #GITHUB_TOKEN: ${{ secrets.REPO_TOKEN_PR }}
       PR: ${{ github.event.pull_request.html_url }}
-      SOURCE: ${{ github.event.pull_request.head.ref }}
-      TARGET: ${{ github.event.pull_request.base.ref }}
+      #SOURCE: ${{ github.event.pull_request.head.ref }}
+      #TARGET: ${{ github.event.pull_request.base.ref }}
     steps:      
       - id: check_condition
+        # Trigger when a PR is closed and meged to main
         run: |
             echo "condition_met=true" >> $GITHUB_ENV
         if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
 
       - name: Common information  
         run: |
-          echo "The PR is $PR"
-          echo "The PR source is $SOURCE"
-          echo "The PR target is $TARGET"        
+          echo "Auto propagation changes of PR $PR " 
+          echo "The PR source branch is ${{github.event.pull_request.head.ref}}"
+          echo "The PR target branch is ${{github.event.pull_request.base.ref}}"
+          echo "The PR is merged: ${{github.event.pull_request.merged}}"
 
       - name: Checkout code
         if: env.condition_met == 'true'
-        uses: actions/checkout@v2 # important!
+        uses: actions/checkout@v4
         
       - name: Push changes 
+        if: env.condition_met == 'true'
         uses: BetaHuhn/repo-file-sync-action@v1
         with:
           GH_PAT: ${{ secrets.GH_TOKEN }}
           CONFIG_PATH: .github/repo-file-sync-action_conf.yml
-
-      #- name: Push changes  # shold be located in depended repo
-      #  uses: repo-sync/github-sync@v2
-      #  with:
-      #    source_repo: "SavitskayaYlia/ci-cd"
-      #    destination_repo: "SavitskayaYlia/ci-cd-depended" # not work
-      #    github_token: ${{ secrets.GH_TOKEN }}
-
-          
-      #- name: Push Changes and Create PR to Repo2
-      #  if: env.condition_met == 'true'
-      #  uses: ahmadnassri/action-template-repository-sync@v2
-      #  with:
-      #    github-token: ${{ secrets.GH_TOKEN }}
-      #    config: .github/merge_to_main_conf.yml
-          #dry-run: false
-          #skip-ci: true
-      
-      #- name: Create Pull Request in Dependent Repository
-      #  uses: peter-evans/create-pull-request@v3
-      #  with:
-      #    token: ${{ secrets.GH_TOKEN }}  # Ensure this token has repo scope
-      #    branch: main       # Branch that the changes were synced to
-      #    base: main                 # Base branch to merge the changes
-      #    title: 'Update from Template'
-      #    body: 'This PR synchronizes the latest template changes.'
-      #    repo: SavitskayaYlia/ci-cd-privat
