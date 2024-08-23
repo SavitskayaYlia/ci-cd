@@ -41,7 +41,7 @@ jobs:
       
       - name: Push Changes and Create PR to Repo2
         if: env.condition_met == 'true'
-        uses: ahmadnassri/action-template-repository-sync@v1
+        uses: ahmadnassri/action-template-repository-sync@v2
         with:
           github-token: ${{ secrets.GH_TOKEN }}
           config: .github/merge_to_main_conf.yml
