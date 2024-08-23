@@ -1,2 +1,6 @@
-SavitskayaYlia/ci-cd-depended2
-SavitskayaYlia/ci-cd-privat2
+group:
+  repos: |
+    SavitskayaYlia/ci-cd-depended2@dev
+    SavitskayaYlia/ci-cd-privat2@dev
+  files: 
+    - README.md
