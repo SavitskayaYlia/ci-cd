@@ -4,7 +4,7 @@ dependents:
 additional:  
   - "ci-cd-*"
   
-
-
+files:
+  - "README.md"
 
           
