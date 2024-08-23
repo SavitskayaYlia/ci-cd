@@ -17,8 +17,8 @@ rules:
     targets:
       - branch: "development"
         repos:
-          - "SavitskayaYlia/ci-cd-privat2"
-          - "SavitskayaYlia/ci-cd-privat"
-          - "SavitskayaYlia/ci-cd-depended2"
-          - "SavitskayaYlia/ci-cd-depended"
+          - "ci-cd-privat2"
+          - "ci-cd-privat"
+          - "ci-cd-depended2"
+          - "ci-cd-depended"
           
