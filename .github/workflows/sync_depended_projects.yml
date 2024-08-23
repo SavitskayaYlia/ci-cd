@@ -41,3 +41,8 @@ jobs:
         with:
           GH_PAT: ${{ secrets.GH_TOKEN }}
           CONFIG_PATH: .github/repo-file-sync-action_conf.yml
+          PR_LABELS: |
+            file-sync
+            automerge
+          BRANCH_PREFIX: 
+          
