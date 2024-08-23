@@ -37,7 +37,7 @@ jobs:
 
       - name: Checkout code
         if: env.condition_met == 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2 # important!
       
       - name: Push Changes and Create PR to Repo2
         if: env.condition_met == 'true'
