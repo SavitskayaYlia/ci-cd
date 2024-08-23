@@ -18,7 +18,7 @@ jobs:
       #SOURCE: ${{ github.event.pull_request.head.ref }}
       #TARGET: ${{ github.event.pull_request.base.ref }}
     steps:      
-      - id: check_condition
+      - name: Check conditions
         # Trigger when a PR is closed and meged to main
         run: |
             echo "condition_met=true" >> $GITHUB_ENV
