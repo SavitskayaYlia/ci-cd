@@ -6,5 +6,6 @@ additional:
   
 files:
   - "README.md"
+  - "!.github/merge_to_main_conf.yml"
 
           
