@@ -5,6 +5,3 @@ group:
   files:
    - python/
    - README.md
-  
-commitMessage: "Synchronize all files"
-# syncMethod: "replace" 
