@@ -3,6 +3,6 @@ group:
     SavitskayaYlia/ci-cd-depended2@dev
     SavitskayaYlia/ci-cd-privat2@development
   files: 
-    - "**/*"
+    - **/*
 commitMessage: "Synchronize all files"
 # syncMethod: "replace" 
