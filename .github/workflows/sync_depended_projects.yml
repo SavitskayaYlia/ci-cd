@@ -19,6 +19,7 @@ jobs:
     env:
       PR: ${{ github.event.pull_request.html_url }}
       TEMPLATE_REPO_NAME: 'astro-insights-template'
+      condition_met: False
 
     steps:
       - name: Set CURRENT_REPO_NAME
