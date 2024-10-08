@@ -3,11 +3,14 @@
 
 #  https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#github-context  
 
-name: Automatically create PR for dependent projects
-run-name: PR ${{ github.event.pull_request.html_url }} Auto propagation changes
+# As soon as any changes are merged into the main branch of a Git repository,
+# a GitHub Action is triggered to create pull requests in S4 repositories.
+name: Automatically create PR for S4 repositories
+run-name: Auto propagation changes in main branch to S4 repositories
 on:
   pull_request:
-    types: closed 
+    types: closed
+  workflow_dispatch: # for test purpose
 
 jobs:
   create_pr:
@@ -15,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PR: ${{ github.event.pull_request.html_url }}
-      TEMPLATE_REPO_NAME: 'ci-cd' #'astro-insights-template'
+      TEMPLATE_REPO_NAME: 'astro-insights-template'
 
     steps:
       - name: Set CURRENT_REPO_NAME
@@ -35,16 +38,16 @@ jobs:
           echo "The PR source branch is ${{github.event.pull_request.head.ref}}"
           echo "The PR target branch is ${{github.event.pull_request.base.ref}}"
           echo "The PR is merged: ${{github.event.pull_request.merged}}"
-          echo "Еhe conditions for the sync are met ${{env.condition_met}}"
+          echo "Еhe conditions for the sync are met: ${{env.condition_met}}"
 
       - name: Check repo name
         run: |
           echo "The 'automatically create PR for S4 repositories' action is not supported from the repo ${{env.CURRENT_REPO_NAME}}"
-          echo "The action designed for the sunc of the ${{env.TEMPLATE_REPO_NAME}} repo and S4 repos and invocated from the repo  ${{env.TEMPLATE_REPO_NAME}}"
+          echo "The action designed for the sunc of the ${{env.TEMPLATE_REPO_NAME}} repo and S4 repos and can be invocated only from the repo  ${{env.TEMPLATE_REPO_NAME}}"
           echo "The synchronization process will be omitted."
         if: env.CURRENT_REPO_NAME != env.TEMPLATE_REPO_NAME
 
-
+        
       - name: Checkout code
         if: env.condition_met == 'true'
         uses: actions/checkout@v4
@@ -57,6 +60,8 @@ jobs:
           CONFIG_PATH: .github/sync_depended_projects_conf.yml
           PR_LABELS: |
             file-sync
-            automerge
-          BRANCH_PREFIX: 
+            automatically-created
+          #BRANCH_PREFIX: sync_${{github.run_id}} # add the prefix to pr branch
+          PR_BODY: "Auto propagation changes of PR ${{env.PR}}"
+          OVERWRITE_EXISTING_PR: true
           
