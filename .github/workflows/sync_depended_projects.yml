@@ -17,9 +17,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PR: ${{ github.event.pull_request.html_url }}
-      CURRENT_REPO_NAME: $(echo ${{ github.repository }} | cut -d'/' -f2)
       TEMPLATE_REPO_NAME: 'astro-insights-template'
+      
     steps:
+      - name: Set CURRENT_REPO_NAME
+        run: echo "CURRENT_REPO_NAME=$(echo ${{ github.repository }} | cut -d'/' -f2)" >> $GITHUB_ENV
+
       - name: Check conditions
         run: |
           echo "Trigger this workflow when a PR is closed and meged to main branch "
@@ -28,9 +31,9 @@ jobs:
 
       - name: Common information
         run: |
-          echo "Auto propagation changes of PR env.PR"
-          echo "Current repo name is ${{env.CURRENT_REPO_NAME}}"
-          echo "Template repo name is ${{env.TEMPLATE_REPO_NAME}}"
+          echo "Auto propagation changes of PR ${{env.PR}}"
+          echo "Current repo name is `${{env.CURRENT_REPO_NAME}}`"
+          echo "Template repo name is `${{env.TEMPLATE_REPO_NAME}}`"
           echo "The PR source branch is ${{github.event.pull_request.head.ref}}"
           echo "The PR target branch is ${{github.event.pull_request.base.ref}}"
           echo "The PR is merged: ${{github.event.pull_request.merged}}"
