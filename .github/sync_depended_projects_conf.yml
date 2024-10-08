@@ -1,7 +1,6 @@
 group:
  - repos: |
      SavitskayaYlia/astro-depended-2@dev
-     SavitskayaYlia/ci-cd-privat2@development
    files:
      - python/
      - README.md
