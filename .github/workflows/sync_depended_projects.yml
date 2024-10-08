@@ -8,6 +8,7 @@ run-name: PR ${{ github.event.pull_request.html_url }} Auto propagation changes
 on:
   pull_request:
     types: closed 
+
 jobs:
   create_pr:
     name: Create the PR for the S4 repositories
@@ -22,9 +23,9 @@ jobs:
 
       - name: Check conditions
         run: |
-          echo "Trigger this workflow when a PR is closed and meged to main branch "
+          echo "Trigger this workflow when a PR is closed and meged to main branch of the repo ${{env.TEMPLATE_REPO_NAME}}"
           echo "condition_met=true" >> $GITHUB_ENV
-        if: ${{ env.CURRENT_REPO_NAME == env.TEMPLATE_REPO_NAME }} && ((github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main') || github.event_name == 'workflow_dispatch')
+        if: env.CURRENT_REPO_NAME == env.TEMPLATE_REPO_NAME && ((github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main') || github.event_name == 'workflow_dispatch')
 
       - name: Common information
         run: |
@@ -34,13 +35,15 @@ jobs:
           echo "The PR source branch is ${{github.event.pull_request.head.ref}}"
           echo "The PR target branch is ${{github.event.pull_request.base.ref}}"
           echo "The PR is merged: ${{github.event.pull_request.merged}}"
+          echo "Еhe conditions for the sync are met ${{env.condition_met}}"
 
       - name: Check repo name
         run: |
           echo "The 'automatically create PR for S4 repositories' action is not supported from the repo ${{env.CURRENT_REPO_NAME}}"
           echo "The action designed for the sunc of the ${{env.TEMPLATE_REPO_NAME}} repo and S4 repos and invocated from the repo  ${{env.TEMPLATE_REPO_NAME}}"
           echo "The synchronization process will be omitted."
-        if: ${{ env.CURRENT_REPO_NAME != env.TEMPLATE_REPO_NAME }}
+        if: env.CURRENT_REPO_NAME != env.TEMPLATE_REPO_NAME
+
 
       - name: Checkout code
         if: env.condition_met == 'true'
