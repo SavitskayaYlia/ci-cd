@@ -65,6 +65,6 @@ jobs:
 
       - name: Final astro deployment template YAML
         run: |
-          echo .github/astro_deployment_template.yaml
+          cat .github/astro_deployment_template.yaml
 
     
