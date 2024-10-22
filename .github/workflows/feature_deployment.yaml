@@ -37,7 +37,7 @@ jobs:
 
   create_deployment:
     name: Create astro deployment for the PR
-    if: check_conditions.outputs.should-run-next == 'true'
+    #if: needs.check_conditions.outputs.should-run-next == true
     runs-on: ubuntu-latest
     env:
       VAR_DATABRIKS_CONN: ${{ secrets.ASTRO_DATABRIKS_CONN }}
@@ -48,6 +48,9 @@ jobs:
       SCHEDULES_HIBERNATE_AT:
       SCHEDULES_WAKE_AT:
     steps:
+      - name: Print
+        run: echo ${{needs.check_conditions.outputs.should-run-next}}
+
       - name: Checkout code
         uses: actions/checkout@v4
 
