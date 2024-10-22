@@ -52,7 +52,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Replace Parameters in YAML
-        run: >-
+        run: |
           sed -i -e 's/[[VAR_DATABRIKS_CONN]]/${{env.VAR_DATABRIKS_CONN}}/g' | \
           -e 's/[[CONFIGIRATION_NAME]]/${{env.CONFIGIRATION_NAME}}/g' | \
           -e 's/[[CONFIGIRATION_DESCRIPTION]]/${{env.CONFIGIRATION_DESCRIPTION}}/g' | \
@@ -61,6 +61,7 @@ jobs:
           -e 's/[[SCHEDULES_HIBERNATE_AT]]/${{env.SCHEDULES_HIBERNATE_AT}}/g' | \
           -e 's/[[SCHEDULES_WAKE_AT]]/${{env.SCHEDULES_WAKE_AT}}/g' | \
           .github/astro_deployment_template.yaml
+        shell: bash
 
       - name: Final astro deployment template YAML
         run: |
