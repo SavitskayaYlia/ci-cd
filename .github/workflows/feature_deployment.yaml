@@ -1,4 +1,4 @@
-# Run this workflow at any commit at main branch
+
 name: Create astro feature deployment
 run-name: Create astro feature deployment
 on:
@@ -41,8 +41,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VAR_DATABRIKS_CONN: ${{ secrets.ASTRO_DATABRIKS_CONN }}
+      CONFIGIRATION_NAME: "insights-core-ae-${{github.ref}}-dev"
       CONFIGIRATION_DESCRIPTION: "Auto create from the branch ${{github.ref}}"
-      CONFIGIRATION_CLUSTER_NAME: "insights-core-ae-${{github.ref}}-dev"
+      CONFIGIRATION_CLUSTER_NAME: "dedicated-cluster"
       CONFIGIRATION_WORKSPACE_NAME: "dev-workspace-insights"
       SCHEDULES_HIBERNATE_AT:
       SCHEDULES_WAKE_AT:
@@ -53,24 +54,32 @@ jobs:
       - name: Replace Parameters in YAML
         run: |
           sed -i -e 's/[[VAR_DATABRIKS_CONN]]/${{env.VAR_DATABRIKS_CONN}}/g' |
+          -e 's/[[CONFIGIRATION_NAME]]/${{env.CONFIGIRATION_NAME}}/g' |
           -e 's/[[CONFIGIRATION_DESCRIPTION]]/${{env.CONFIGIRATION_DESCRIPTION}}/g' |
           -e 's/[[CONFIGIRATION_CLUSTER_NAME]]/${{env.CONFIGIRATION_CLUSTER_NAME}}/g' |
           -e 's/[[CONFIGIRATION_WORKSPACE_NAME]]/${{env.CONFIGIRATION_WORKSPACE_NAME}}/g' |
           -e 's/[[SCHEDULES_HIBERNATE_AT]]/${{env.SCHEDULES_HIBERNATE_AT}}/g' |
           -e 's/[[SCHEDULES_WAKE_AT]]/${{env.SCHEDULES_WAKE_AT}}/g' |
-          .github/deployment_template.yaml
+          .github/astro_deployment_template.yaml
 
       - name: Final astro deployment template YAML
         run: |
-          echo .github/deployment_template.yaml
+          echo .github/astro_deployment_template.yaml
 
       - name: Install Astro CLI
         run: curl -sSL https://install.astronomer.io | sudo bash -s
 
-      - name: Run Astro tests
-        run: |
-          astro dev parse
-          astro dev pytest
-
       - name: Create deployment in astro
-          run: astro deployment create --deployment-file .github/deployment_template.yaml
+          run: astro deployment create --deployment-file .github/astro_deployment_template.yaml
+
+      - name: Set ASTRO_DEPLOYMENT_ID
+          run: echo "ASTRO_DEPLOYMENT_ID=$(astro workspace switch ${{env.CONFIGIRATION_WORKSPACE_NAME}} | astro deployment list | grep ${{env.CONFIGIRATION_NAME}} | awk '{print $6}'" >> $GITHUB_ENV
+
+      - name: Deploy to Astro
+          uses: actions/astronomer_deploy-action@v0.6
+          with:
+            deployment-id: ${{ env.ASTRO_DEPLOYMENT_ID }}
+            description: ""
+            # parsing DAG definitions to ensure correctness
+            parse: true
+            pytest: true
