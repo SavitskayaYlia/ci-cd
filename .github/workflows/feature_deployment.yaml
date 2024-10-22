@@ -26,14 +26,14 @@ jobs:
       - name: Conditions are not met
         run: |
           echo "The deploment can be created only from the non-dev and non-main brunch and can be invocated only from the repo ${{env.REPO_NAME}}"
-          echo "Current repo name ${{env.CURRENT_REPO_NAME}} or branch ${{github.ref}} does not satisfy the condition "
-        if: env.CURRENT_REPO_NAME != env.REPO_NAME || github.ref == "refs/heads/main" || github.ref == "refs/heads/dev"
+          echo "Current repo name ${{env.CURRENT_REPO_NAME}} or branch ${{github.ref}} does not satisfy the condition"
+        if: env.CURRENT_REPO_NAME != env.REPO_NAME || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
 
       - id: condition-check
         run: |
           echo "The deploment can be created only from the non-dev and non-main brunch and can be invocated only from the repo ${{env.REPO_NAME}}"
           echo "::set-output name=run-next::true"
-        if: env.CURRENT_REPO_NAME == env.REPO_NAME && github.ref != "refs/heads/main" && github.ref != "refs/heads/dev"
+        if: env.CURRENT_REPO_NAME == env.REPO_NAME && github.ref != 'refs/heads/main' && github.ref != 'refs/heads/dev'
 
   create_deployment:
     name: Create astro deployment for the PR
