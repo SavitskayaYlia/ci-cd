@@ -9,7 +9,7 @@ jobs:
     name: Check conditions
     runs-on: ubuntu-latest
     env:
-      REPO_NAME: 'ci-cd'
+      REPO_NAME: 'astro-dev-insights-core-ae'
     outputs:
       should-run-next: ${{ steps.condition-check.outputs.run-next }}
     steps:
@@ -30,10 +30,9 @@ jobs:
         if: env.CURRENT_REPO_NAME != env.REPO_NAME || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
 
       - id: condition-check
-        name: Conditions not met
+        name: Conditions are met
         run: |
-          echo "The deploment can be created only from the non-dev and non-main brunch and can be invocated only from the repo ${{env.REPO_NAME}}"
-          echo "::set-output name=run-next::true"
+          echo "run-next=true" >> $GITHUB_ENV
         if: env.CURRENT_REPO_NAME == env.REPO_NAME && github.ref != 'refs/heads/main' && github.ref != 'refs/heads/dev'
 
   create_deployment:
