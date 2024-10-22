@@ -37,7 +37,7 @@ jobs:
 
   create_deployment:
     name: Create astro deployment for the PR
-    if: needs.check_conditions.outputs.should-run-next == 'true'
+    if: check_conditions.outputs.should-run-next == 'true'
     runs-on: ubuntu-latest
     env:
       VAR_DATABRIKS_CONN: ${{ secrets.ASTRO_DATABRIKS_CONN }}
