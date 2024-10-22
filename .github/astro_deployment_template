@@ -53,13 +53,13 @@ jobs:
 
       - name: Replace Parameters in YAML
         run: |
-          sed -i -e 's/[[VAR_DATABRIKS_CONN]]/${{env.VAR_DATABRIKS_CONN}}/g' |
-          -e 's/[[CONFIGIRATION_NAME]]/${{env.CONFIGIRATION_NAME}}/g' |
-          -e 's/[[CONFIGIRATION_DESCRIPTION]]/${{env.CONFIGIRATION_DESCRIPTION}}/g' |
-          -e 's/[[CONFIGIRATION_CLUSTER_NAME]]/${{env.CONFIGIRATION_CLUSTER_NAME}}/g' |
-          -e 's/[[CONFIGIRATION_WORKSPACE_NAME]]/${{env.CONFIGIRATION_WORKSPACE_NAME}}/g' |
-          -e 's/[[SCHEDULES_HIBERNATE_AT]]/${{env.SCHEDULES_HIBERNATE_AT}}/g' |
-          -e 's/[[SCHEDULES_WAKE_AT]]/${{env.SCHEDULES_WAKE_AT}}/g' |
+          sed -i -e 's/[[VAR_DATABRIKS_CONN]]/${{env.VAR_DATABRIKS_CONN}}/g' | \
+          -e 's/[[CONFIGIRATION_NAME]]/${{env.CONFIGIRATION_NAME}}/g' | \
+          -e 's/[[CONFIGIRATION_DESCRIPTION]]/${{env.CONFIGIRATION_DESCRIPTION}}/g' | \
+          -e 's/[[CONFIGIRATION_CLUSTER_NAME]]/${{env.CONFIGIRATION_CLUSTER_NAME}}/g' | \
+          -e 's/[[CONFIGIRATION_WORKSPACE_NAME]]/${{env.CONFIGIRATION_WORKSPACE_NAME}}/g' | \
+          -e 's/[[SCHEDULES_HIBERNATE_AT]]/${{env.SCHEDULES_HIBERNATE_AT}}/g' | \
+          -e 's/[[SCHEDULES_WAKE_AT]]/${{env.SCHEDULES_WAKE_AT}}/g' | \
           .github/astro_deployment_template.yaml
 
       - name: Final astro deployment template YAML
