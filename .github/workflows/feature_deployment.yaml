@@ -9,7 +9,7 @@ jobs:
     name: Check conditions
     runs-on: ubuntu-latest
     env:
-      REPO_NAME: 'astro-dev-insights-core-ae'
+      REPO_NAME: 'ci-cd'
     outputs:
       should-run-next: ${{ steps.condition-check.outputs.run-next }}
     steps:
