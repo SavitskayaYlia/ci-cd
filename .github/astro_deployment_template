@@ -66,20 +66,3 @@ jobs:
         run: |
           echo .github/deployment_template.yaml
 
-      - name: Install Astro CLI
-        run: curl -sSL https://install.astronomer.io | sudo bash -s
-
-      - name: Create deployment in astro
-          run: astro deployment create --deployment-file .github/astro_deployment_template.yaml
-
-      - name: Set ASTRO_DEPLOYMENT_ID
-          run: echo "ASTRO_DEPLOYMENT_ID=$(astro workspace switch ${{env.CONFIGIRATION_WORKSPACE_NAME}} | astro deployment list | grep ${{env.CONFIGIRATION_NAME}} | awk '{print $6}'" >> $GITHUB_ENV
-
-      - name: Deploy to Astro
-          uses: actions/astronomer_deploy-action@v0.6
-          with:
-            deployment-id: ${{ env.ASTRO_DEPLOYMENT_ID }}
-            description: ""
-            # parsing DAG definitions to ensure correctness
-            parse: true
-            pytest: true
