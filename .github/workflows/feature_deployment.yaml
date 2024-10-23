@@ -22,6 +22,15 @@ jobs:
           echo "Current repo name: ${{env.CURRENT_REPO_NAME}}"
           echo "Core repo name: ${{env.REPO_NAME}}"
           echo "The source branch: ${{github.ref}}"
+          echo "github.action_ref: ${{github.action_ref}}"
+          echo "github.action_repository: ${{github.action_repository}}"
+          echo "github.base_ref: ${{github.base_ref}}"
+          echo "github.head_ref: ${{github.head_ref}}"
+          echo "github.ref_name: ${{github.ref_name}}"
+          echo "github.ref_type: ${{github.ref_type}}"
+
+
+          
 
       - name: Conditions are not met
         run: |
