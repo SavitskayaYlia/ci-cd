@@ -2,10 +2,10 @@ deployment:
     environment_variables:
         - is_secret: true
           key: databricks-conn-insights-core-ae
-          value: [[VAR_DATABRIKS_CONN]]
+          value: ${VAR_DATABRIKS_CONN}
     configuration:
-        name: "[[CONFIGIRATION_NAME]]"
-        description: "[[CONFIGIRATION_DESCRIPTION]]"
+        name: "${CONFIGIRATION_NAME}"
+        description: "${CONFIGIRATION_DESCRIPTION}"
         runtime_version: 11.4.0
         dag_deploy_enabled: true
         ci_cd_enforcement: false
@@ -14,8 +14,8 @@ deployment:
         is_development_mode: true
         executor: CELERY
         scheduler_count: 1
-        cluster_name: [[CONFIGIRATION_CLUSTER_NAME]]
-        workspace_name: [[CONFIGIRATION_WORKSPACE_NAME]]
+        cluster_name: ${CONFIGIRATION_CLUSTER_NAME}
+        workspace_name: ${CONFIGIRATION_WORKSPACE_NAME}
         deployment_type: DEDICATED
         cloud_provider: AWS
         region: us-east-1
@@ -31,8 +31,8 @@ deployment:
           worker_concurrency: 5
           worker_type: A5
     hibernation_schedules:
-        - hibernate_at: [[SCHEDULES_HIBERNATE_AT]]
-          wake_at: [[SCHEDULES_WAKE_AT]]
+        - hibernate_at: ${SCHEDULES_HIBERNATE_AT}
+          wake_at: ${SCHEDULES_WAKE_AT}
           description: "hibernation schedule 1"
           enabled: true
 
