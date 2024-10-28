@@ -1,0 +1,34 @@
+deployment:
+    configuration:
+        name: "${CONFIGIRATION_NAME}"
+        description: "${CONFIGIRATION_DESCRIPTION}"
+        runtime_version: 12.0.1
+        dag_deploy_enabled: true
+        ci_cd_enforcement: false
+        scheduler_size: SMALL
+        is_high_availability: false
+        is_development_mode: true
+        executor: CELERY
+        scheduler_count: 1
+        cluster_name: ${CONFIGIRATION_CLUSTER_NAME}
+        workspace_name: ${CONFIGIRATION_WORKSPACE_NAME}
+        deployment_type: HOSTED_DEDICATED
+        cloud_provider: AWS
+        region: us-east-1
+        default_task_pod_cpu: "0.25"
+        default_task_pod_memory: 0.5Gi
+        resource_quota_cpu: "10"
+        resource_quota_memory: 20Gi
+        workload_identity: ""
+    worker_queues:
+        - name: default
+          max_worker_count: 10
+          min_worker_count: 0
+          worker_concurrency: 5
+          worker_type: A5
+    hibernation_schedules:
+        - hibernate_at: ${SCHEDULES_HIBERNATE_AT}
+          wake_at: ${SCHEDULES_WAKE_AT}
+          description: "hibernation schedule 1"
+          enabled: false
+
