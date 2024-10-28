@@ -55,30 +55,24 @@ jobs:
     if: needs.check_conditions.outputs.should-run-next == 'true'
     runs-on: ubuntu-latest
     env:
-      VAR_DATABRIKS_CONN: ${{ secrets.ASTRO_DATABRIKS_CONN }}
-      CONFIGIRATION_NAME: "insights-core-ae-${{github.ref}}-dev"
-      CONFIGIRATION_DESCRIPTION: "Auto create from the branch ${{github.ref}}"
+      DATABRIKS_CONN: ${{ secrets.ASTRO_DATABRIKS_CONN }}
+      # Name of deployment: Please note that the team name will be calculated based on the value of this deployment's name.
+      CONFIGIRATION_NAME: "insights-${{github.ref_name}}-core-ae-dev"
+      CONFIGIRATION_DESCRIPTION: "Auto create from the branch ${{github.ref_name}}"
       CONFIGIRATION_CLUSTER_NAME: "dedicated-cluster"
       CONFIGIRATION_WORKSPACE_NAME: "dev-workspace-insights"
-      SCHEDULES_HIBERNATE_AT:
-      SCHEDULES_WAKE_AT:
+      # The values for the hibernate scheduler are only provided as an example, so by default, the hibernate scheduler is disabled and can be activated manually.
+      SCHEDULES_HIBERNATE_AT: "0 18 * * 1-5"
+      SCHEDULES_WAKE_AT: "0 9 * * 1-5"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Replace Parameters in YAML
-        run: |
-          sed -i -e 's|\[\[VAR_DATABRIKS_CONN\]\]|${{env.DATABRIKS_CONN}}|g' \
-          -e 's|\[\[CONFIGIRATION_NAME\]\]|${{env.CONFIGIRATION_NAME}}|g' \
-          -e 's|\[\[CONFIGIRATION_DESCRIPTION\]\]|${{env.CONFIGIRATION_DESCRIPTION}}|g' \
-          -e 's|\[\[CONFIGIRATION_CLUSTER_NAME\]\]|${{env.CONFIGIRATION_CLUSTER_NAME}}|g' \
-          -e 's|\[\[CONFIGIRATION_WORKSPACE_NAME\]\]|${{env.CONFIGIRATION_WORKSPACE_NAME}}|g' \
-          -e 's|\[\[SCHEDULES_HIBERNATE_AT\]\]|${{env.SCHEDULES_HIBERNATE_AT}}|g' \
-          -e 's|\[\[SCHEDULES_WAKE_AT\]\]|${{env.SCHEDULES_WAKE_AT}}|g' \
-          .github/astro_deployment_template.yaml
+        run: envsubst < .github/astro_deployment_template.yaml > .github/processed_astro_feature_deployment_template.yaml
 
       - name: Final astro deployment template YAML
         run: |
-          cat .github/astro_deployment_template.yaml
+          cat .github/processed_astro_feature_deployment_template.yaml
 
     
