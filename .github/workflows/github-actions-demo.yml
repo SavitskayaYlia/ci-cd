@@ -12,4 +12,12 @@ jobs:
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - run: echo "The commit message is ${{ github.event.commits[0].message }}"
+      - run: |
+          if [ "${{ github.event.pull_request.merged }}" == "true" ]; then
+            echo "Title of merged PR: ${{ github.event.pull_request.title }}"
+          else
+            echo "Commit message of the latest commit: ${{ github.event.commits[0].message }}"
+          fi
+        
+       
 
