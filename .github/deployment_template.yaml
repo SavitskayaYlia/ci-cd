@@ -2,7 +2,7 @@ deployment:
     configuration:
         name: "${CONFIGIRATION_NAME}"
         description: "${CONFIGIRATION_DESCRIPTION}"
-        runtime_version: 11.4.0
+        runtime_version: 12.0.0
         dag_deploy_enabled: true
         ci_cd_enforcement: false
         scheduler_size: SMALL
