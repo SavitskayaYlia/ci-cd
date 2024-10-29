@@ -16,7 +16,7 @@ jobs:
       - run: echo "The commit message is ${{ github.event.commits[0].message }}"
       - run: echo " github.event_name is ${{ github.event_name }} "
       - run: |
-          echo  " secrets ${{ env.ASTRO_API_TOKEN }}"
+          echo  " secrets ${{ env.TEST_VAR }}"
           echo "Title of merged PR: ${{ github.event.pull_request.title }}"
           if [ "${{ github.event.pull_request.merged }}" == "true" ]; then
             echo "Title of merged PR: ${{ github.event.pull_request.title }}"
