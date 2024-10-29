@@ -4,7 +4,8 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     env:
-      ASTRO_API_TOKEN: ${{ secrets.API_KEY }}     
+      ASTRO_API_TOKEN: ${{ secrets.API_KEY }}    
+      TESTVAR: ${{ vars.TEST_VAR }}
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
@@ -16,7 +17,7 @@ jobs:
       - run: echo "The commit message is ${{ github.event.commits[0].message }}"
       - run: echo " github.event_name is ${{ github.event_name }} "
       - run: |
-          echo  " TEST_VAR ${{ vars.TEST_VAR }}"
+          echo  " TEST_VAR ${{ env.TESTVAR }}"
           echo "Title of merged PR: ${{ github.event.pull_request.title }}"
           if [ "${{ github.event.pull_request.merged }}" == "true" ]; then
             echo "Title of merged PR: ${{ github.event.pull_request.title }}"
