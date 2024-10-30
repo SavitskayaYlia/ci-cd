@@ -14,8 +14,6 @@ jobs:
     outputs:
       should-run-next: ${{ steps.condition-check.outputs.run-next }}
     steps:
-      # Check conditions to determine if the next steps should run
-      #'astro-dev-insights-core-ae'
       - id: check_conditions
         name: Validate deployment conditions
         run: |
@@ -24,7 +22,7 @@ jobs:
   create_deployment:
     name: Create astro deployment for the PR
     needs: check_conditions
-    # if: needs.check_conditions.outputs.should-run-next == 'true'
+    if: needs.check_conditions.outputs.should-run-next == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: ECHO
