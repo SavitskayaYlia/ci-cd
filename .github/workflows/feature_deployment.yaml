@@ -1,6 +1,8 @@
-# test
+# Astronomer feature deployment GitHub action that create the Astronomer Deployment
+# based on the Astronomer deployment template file .github/astro_feature_deployment_template.yaml
+
 name: Create astro feature deployment
-run-name: Create astro feature deployment   
+run-name: Create astro feature deployment
 on:
   workflow_dispatch:
 
@@ -8,78 +10,79 @@ jobs:
   check_conditions:
     name: Check conditions
     runs-on: ubuntu-latest
-    env:
-      REPO_NAME: 'astro-dev-insights-core-ae'
+    environment: dev
     outputs:
       should-run-next: ${{ steps.condition-check.outputs.run-next }}
     steps:
-      - name: Set CURRENT_REPO_NAME
-        run: echo "CURRENT_REPO_NAME=$(echo ${{ github.repository }} | cut -d'/' -f2)" >> $GITHUB_ENV
-
-      - name: Common information
+      # Check conditions to determine if the next steps should run
+      - id: check_conditions
+        name: Validate deployment conditions
         run: |
-          echo "Create astro deployment for the PR ${{ github.event.pull_request.html_url }}"
-          echo "Current repo name: ${{env.CURRENT_REPO_NAME}}"
-          echo "Core repo name: ${{env.REPO_NAME}}"
-          echo "The source branch: ${{github.ref}}"
-
-      - name: Conditions are not met
-        run: |
-          echo "The deploment can be created only from the non-dev and non-main brunch and can be invocated only from the repo ${{env.REPO_NAME}}"
-          echo "Current repo name ${{env.CURRENT_REPO_NAME}} or branch ${{github.ref}} does not satisfy the condition "
-        if: env.CURRENT_REPO_NAME != env.REPO_NAME || github.ref == "refs/heads/main" || github.ref == "refs/heads/dev"
-
-      - id: condition-check
-        run: |
-          echo "The deploment can be created only from the non-dev and non-main brunch and can be invocated only from the repo ${{env.REPO_NAME}}"
-          echo "::set-output name=run-next::true"
-        if: env.CURRENT_REPO_NAME == env.REPO_NAME && github.ref != "refs/heads/main" && github.ref != "refs/heads/dev"
+          current_repo_name=$(echo "${{ github.repository }}" | cut -d'/' -f2)
+          repo_name='astro-dev-insights-core-ae'
+          if [[ "$current_repo_name" == "$repo_name" ]] && [[ "${{ github.ref }}" != 'refs/heads/main' ]] && [[ "${{ github.ref }}" != 'refs/heads/dev' ]]; then
+            echo "::set-output name=valid_conditions::true"
+          else
+            echo "::set-output name=valid_conditions::false"
+            echo "Deployment can only be created from non-dev and non-main branches by $repo_name."
+          fi
 
   create_deployment:
     name: Create astro deployment for the PR
+    needs: check_conditions
     if: needs.check_conditions.outputs.should-run-next == 'true'
     runs-on: ubuntu-latest
-    env:
-      VAR_DATABRIKS_CONN: ${{ secrets.ASTRO_DATABRIKS_CONN }}
-      CONFIGIRATION_NAME: "insights-core-ae-${{github.ref}}-dev"
-      CONFIGIRATION_DESCRIPTION: "Auto create from the branch ${{github.ref}}"
-      CONFIGIRATION_CLUSTER_NAME: "dedicated-cluster"
-      CONFIGIRATION_WORKSPACE_NAME: "dev-workspace-insights"
-      SCHEDULES_HIBERNATE_AT:
-      SCHEDULES_WAKE_AT:
+    # Beware: The git environment dev has restriction rul on branches, it is not possible to create local git action variables.
+    environment: dev
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Replace Parameters in YAML
+      - name: Install gettext
+        run: sudo apt-get update && sudo apt-get install -y gettext
+
+      - name: Preprocess template with envsubst
         run: |
-          sed -i -e 's/[[VAR_DATABRIKS_CONN]]/${{env.VAR_DATABRIKS_CONN}}/g' |
-          -e 's/[[CONFIGIRATION_NAME]]/${{env.CONFIGIRATION_NAME}}/g' |
-          -e 's/[[CONFIGIRATION_DESCRIPTION]]/${{env.CONFIGIRATION_DESCRIPTION}}/g' |
-          -e 's/[[CONFIGIRATION_CLUSTER_NAME]]/${{env.CONFIGIRATION_CLUSTER_NAME}}/g' |
-          -e 's/[[CONFIGIRATION_WORKSPACE_NAME]]/${{env.CONFIGIRATION_WORKSPACE_NAME}}/g' |
-          -e 's/[[SCHEDULES_HIBERNATE_AT]]/${{env.SCHEDULES_HIBERNATE_AT}}/g' |
-          -e 's/[[SCHEDULES_WAKE_AT]]/${{env.SCHEDULES_WAKE_AT}}/g' |
-          .github/astro_deployment_template.yaml
+          # Name of deployment: Please note that the team name will be calculated based on the value of this deployment's name.
+          CONFIGURATION_NAME="insights-${{github.ref_name}}-core-ae-dev"
+          CONFIGURATION_DESCRIPTION="Auto create from the branch ${{github.ref_name}}"
+          CONFIGURATION_CLUSTER_NAME="dedicated-cluster"
+          CONFIGURATION_WORKSPACE_NAME="dev-workspace-insights"
+          # The values for the hibernate scheduler are only provided as an example, so by default, the hibernate scheduler is disabled and can be activated manually.
+          SCHEDULES_HIBERNATE_AT="0 18 * * 1-5"
+          SCHEDULES_WAKE_AT="0 9 * * 1-5"
+          envsubst < .github/astro_feature_deployment_template.yaml > .github/processed_astro_feature_deployment_template.yaml
 
       - name: Final astro deployment template YAML
-        run: |
-          echo .github/astro_deployment_template.yaml
+        run: cat .github/processed_astro_feature_deployment_template.yaml
 
       - name: Install Astro CLI
         run: curl -sSL https://install.astronomer.io | sudo bash -s
 
+      - name: Astronomer login
+        run: astro login --token-login ${{ secrets.ASTRO_API_TOKEN }}
+
+      - name: Astronomer workspace switch to dev-workspace-insights
+        run: astro workspace switch dev-workspace-insights
+
       - name: Create deployment in astro
-        run: astro deployment create --deployment-file .github/astro_deployment_template.yaml
+        run: astro deployment create --deployment-file .github/processed_astro_feature_deployment_template.yaml
 
-      - name: Set ASTRO_DEPLOYMENT_ID
-        run: echo "ASTRO_DEPLOYMENT_ID=$(astro workspace switch ${{env.CONFIGIRATION_WORKSPACE_NAME}} | astro deployment list | grep ${{env.CONFIGIRATION_NAME}} | awk '{print $6}'" >> $GITHUB_ENV
+      - name: Get the value of ASTRO_DEPLOYMENT_ID that was just created
+        run: echo "ASTRO_DEPLOYMENT_ID=$(astro workspace switch ${{env.CONFIGURATION_WORKSPACE_NAME}} | astro deployment list | grep ${{env.CONFIGURATION_NAME}} | awk '{print $6}'" >> $GITHUB_ENV
 
-      - name: Deploy to Astro
-        uses: actions/astronomer_deploy-action@v0.6
+      # Get the deployment ID for use in downstream tasks using steps
+      - id: get_deployment_id
+        name: Fetch Deployment ID
+        run: |
+          deployment_id=$(astro deployment list | grep "insights-${{ github.ref_name }}-core-ae-dev" | awk '{print $6}')
+          echo "::set-output name=astro_deployment_id::$deployment_id"
+
+      - name: Deploy to Astro the core project from the branch
+        uses: actions/astronomer_deploy-action@v0.7.1
         with:
-          deployment-id: ${{ env.ASTRO_DEPLOYMENT_ID }}
-          description: ""
+          deployment-id: ${{ steps.get_deployment_id.outputs.astro_deployment_id }}
+          description: "Deploy from the branch ${{github.ref_name}}"
           # parsing DAG definitions to ensure correctness
           parse: true
           pytest: true
