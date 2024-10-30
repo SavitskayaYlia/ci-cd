@@ -68,9 +68,6 @@ jobs:
       - name: Create deployment in astro
         run: astro deployment create --deployment-file .github/processed_astro_feature_deployment_template.yaml
 
-      - name: Get the value of ASTRO_DEPLOYMENT_ID that was just created
-        run: echo "ASTRO_DEPLOYMENT_ID=$(astro workspace switch ${{env.CONFIGURATION_WORKSPACE_NAME}} | astro deployment list | grep ${{env.CONFIGURATION_NAME}} | awk '{print $6}'" >> $GITHUB_ENV
-
       # Get the deployment ID for use in downstream tasks using steps
       - id: get_deployment_id
         name: Fetch Deployment ID
