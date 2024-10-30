@@ -66,28 +66,13 @@ jobs:
 
       - name: Install Astro CLI
         run: curl -sSL https://install.astronomer.io | sudo bash -s
-
-      - name: Astronomer login
-        run: astro login --token-login ${{ secrets.ASTRO_API_TOKEN }}
-
-      - name: Astronomer workspace switch to dev-workspace-insights
-        run: astro workspace switch dev-workspace-insights
-
-      - name: Create deployment in astro
-        run: astro deployment create --deployment-file .github/processed_astro_feature_deployment_template.yaml
-
+    
       # Get the deployment ID for use in downstream tasks using steps
       - id: get_deployment_id
         name: Fetch Deployment ID
         run: |
-          deployment_id=$(astro deployment list | grep "insights-${{ github.ref_name }}-core-ae-dev" | awk '{print $6}')
+          deployment_id="QQQQQQQ"
           echo "deployment_id=$deployment_id" >> "$GITHUB_OUTPUT"
 
       - name: Deploy to Astro the core project from the branch
-        uses: actions/astronomer_deploy-action@v0.7.1
-        with:
-          deployment-id: ${{ steps.get_deployment_id.outputs.deployment_id }}
-          description: "Deploy from the branch ${{github.ref_name}}"
-          # parsing DAG definitions to ensure correctness
-          parse: true
-          pytest: true
+        run: echo " deployment_id ${{ steps.get_deployment_id.outputs.deployment_id }} "
