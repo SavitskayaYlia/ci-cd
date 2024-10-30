@@ -17,7 +17,7 @@ jobs:
       - id: check_conditions
         name: Validate deployment conditions
         run: |
-          echo "run-next=true" >> "$GITHUB_OUTPUT"
+          echo "run-next=true" >> "$GITHUB_ENV"
 
   create_deployment:
     name: Create astro deployment for the PR
