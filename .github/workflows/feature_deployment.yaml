@@ -24,6 +24,7 @@ jobs:
     needs: check_conditions
     if: needs.check_conditions.outputs.should-run-next == 'true'
     runs-on: ubuntu-latest
+    environment: dev
     steps:
       - name: ECHO
         run: |
