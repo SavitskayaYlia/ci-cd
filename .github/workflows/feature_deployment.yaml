@@ -17,7 +17,19 @@ jobs:
       - id: condition-check
         name: Conditions are met
         run: |
-          echo "run-next=true" >> "$GITHUB_OUTPUT"
+          current_repo_name=$(echo "${{ github.repository }}" | cut -d'/' -f2)
+          repo_name='ci-cd'
+          echo "The repo name is $repo_name"
+          echo "The repo name is $current_repo_name"
+          echo "The branch name is ${{ github.ref }} "
+          if [[ "$current_repo_name" == "$repo_name" ]] && [[ "${{ github.ref }}" != 'refs/heads/main' ]] && [[ "${{ github.ref }}" != 'refs/heads/dev' ]]; then
+            echo "run-next=true" >> "$GITHUB_OUTPUT"
+            echo "Conditions are met."
+          else
+            echo "run-next=false" >> "$GITHUB_OUTPUT"
+            echo "Deployment can only be created from non-dev and non-main branches by $repo_name."
+          fi
+          
 
   create_deployment:
     name: Create astro deployment for the PR
