@@ -21,10 +21,10 @@ jobs:
           current_repo_name=$(echo "${{ github.repository }}" | cut -d'/' -f2)
           repo_name='astro-dev-insights-core-ae'
           if [[ "$current_repo_name" == "$repo_name" ]] && [[ "${{ github.ref }}" != 'refs/heads/main' ]] && [[ "${{ github.ref }}" != 'refs/heads/dev' ]]; then
-            "run-next=true" >> "$GITHUB_OUTPUT"
+            echo "run-next=true" >> "$GITHUB_OUTPUT"
             echo "Conditions are met."
           else
-            "run-next=false" >> "$GITHUB_OUTPUT"
+            echo "run-next=false" >> "$GITHUB_OUTPUT"
             echo "Deployment can only be created from non-dev and non-main branches by $repo_name."
           fi
 
