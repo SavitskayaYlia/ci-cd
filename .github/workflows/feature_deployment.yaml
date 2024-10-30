@@ -19,7 +19,7 @@ jobs:
         name: Validate deployment conditions
         run: |
           current_repo_name=$(echo "${{ github.repository }}" | cut -d'/' -f2)
-          repo_name='astro-dev-insights-core-ae'
+          repo_name='ci-cd' #'astro-dev-insights-core-ae'
           if [[ "$current_repo_name" == "$repo_name" ]] && [[ "${{ github.ref }}" != 'refs/heads/main' ]] && [[ "${{ github.ref }}" != 'refs/heads/dev' ]]; then
             echo "run-next=true" >> "$GITHUB_OUTPUT"
             echo "Conditions are met."
