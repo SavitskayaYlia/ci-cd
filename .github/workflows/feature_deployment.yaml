@@ -1,25 +1,31 @@
+# Astronomer feature deployment GitHub action that create the Astronomer Deployment
+# based on the Astronomer deployment template file .github/astro_feature_deployment_template.yaml
+
 name: Create astro feature deployment
+run-name: Create astro feature deployment
 on:
   workflow_dispatch:
 
 jobs:
   check_conditions:
+    name: Check conditions
     runs-on: ubuntu-latest
     environment: dev
     outputs:
-      should-run-next: ${{ steps.condition_check.outputs.run-next }}
+      should-run-next: ${{ steps.condition-check.outputs.run-next }}
     steps:
-      - id: condition_check  # Ensure the step ID matches what is referenced in outputs.
-        name: Validate deployment conditions
+      - id: condition-check
+        name: Conditions are met
         run: |
-          echo "run-next=true" >> $GITHUB_ENV  # Correct the command to set env variable
-        shell: bash
+          echo "run-next=true" >> "$GITHUB_OUTPUT"
 
   create_deployment:
     name: Create astro deployment for the PR
     needs: check_conditions
     if: needs.check_conditions.outputs.should-run-next == 'true'
     runs-on: ubuntu-latest
+    environment: dev    
     steps:
-      - name: ECHO
-        run: echo "Run condition was met, proceeding with deployment."
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
