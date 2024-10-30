@@ -34,7 +34,7 @@ jobs:
   create_deployment:
     name: Create astro deployment for the PR
     needs: check_conditions
-    if: $ {{ needs.check_conditions.outputs.should-run-next == 'true' }}
+    if: ${{ needs.check_conditions.outputs.should-run-next == 'true' }}
     runs-on: ubuntu-latest
     # Beware: The git environment dev has restriction rul on branches, it is not possible to create local git action variables.
     environment: dev
