@@ -35,6 +35,8 @@ jobs:
     runs-on: ubuntu-latest
     # Beware: The git environment dev has restriction rul on branches, it is not possible to create local git action variables.
     environment: dev
+    outputs:
+      deployment_id: ${{ steps.get_deployment_id.outputs.deployment_id }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -72,17 +74,14 @@ jobs:
       # Get the deployment ID for use in downstream tasks using steps
       - id: get_deployment_id
         name: Fetch Deployment ID
-        outputs:
-          deployment_id: ${{ steps.get_deployment_id.outputs.deployment_id }}
         run: |
           deployment_id=$(astro deployment list | grep "insights-${{ github.ref_name }}-core-ae-dev" | awk '{print $6}')
-          echo "run-next=false" >> "$GITHUB_OUTPUT"
           echo "deployment_id=$deployment_id" >> "$GITHUB_OUTPUT"
 
       - name: Deploy to Astro the core project from the branch
         uses: actions/astronomer_deploy-action@v0.7.1
         with:
-          deployment-id: ${{ steps.get_deployment_id.outputs.astro_deployment_id }}
+          deployment-id: ${{ steps.get_deployment_id.outputs.deployment_id }}
           description: "Deploy from the branch ${{github.ref_name}}"
           # parsing DAG definitions to ensure correctness
           parse: true
