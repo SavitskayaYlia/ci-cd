@@ -42,22 +42,26 @@ jobs:
       deployment_id: ${{ steps.get_deployment_id.outputs.deployment_id }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install gettext
-        run: sudo apt-get update && sudo apt-get install -y gettext
+        uses: actions/checkout@v4    
 
       - name: Preprocess template with envsubst
         run: |
           # Name of deployment: Please note that the team name will be calculated based on the value of this deployment's name.
           CONFIGURATION_NAME="insights-${{github.ref_name}}-core-ae-dev"
           CONFIGURATION_DESCRIPTION="Auto create from the branch ${{github.ref_name}}"
-          echo "CONFIGURATION_CLUSTER_NAME=dedicated-cluster" >> $GITHUB_ENV
+          CONFIGURATION_CLUSTER_NAME="dedicated-cluster"
           CONFIGURATION_WORKSPACE_NAME="dev-workspace-insights"
           # The values for the hibernate scheduler are only provided as an example, so by default, the hibernate scheduler is disabled and can be activated manually.
           SCHEDULES_HIBERNATE_AT="0 18 * * 1-5"
           SCHEDULES_WAKE_AT="0 9 * * 1-5"
-          envsubst < .github/astro_feature_deployment_template.yaml > .github/processed_astro_feature_deployment_template.yaml
+          sed -i  -e 's|\[\[VAR_DATABRIKS_CONN\]\]|${{env.DATABRIKS_CONN}}|g' \
+                  -e 's|\[\[CONFIGIRATION_NAME\]\]|${{env.CONFIGIRATION_NAME}}|g' \
+                  -e 's|\[\[CONFIGIRATION_DESCRIPTION\]\]|${{env.CONFIGIRATION_DESCRIPTION}}|g' \
+                  -e 's|\[\[CONFIGIRATION_CLUSTER_NAME\]\]|${{env.CONFIGIRATION_CLUSTER_NAME}}|g' \
+                  -e 's|\[\[CONFIGIRATION_WORKSPACE_NAME\]\]|${{env.CONFIGIRATION_WORKSPACE_NAME}}|g' \
+                  -e 's|\[\[SCHEDULES_HIBERNATE_AT\]\]|${{env.SCHEDULES_HIBERNATE_AT}}|g' \
+                  -e 's|\[\[SCHEDULES_WAKE_AT\]\]|${{env.SCHEDULES_WAKE_AT}}|g' \
+                  .github/astro_deployment_template.yaml > .github/processed_astro_feature_deployment_template.yaml
 
       - name: Final astro deployment template YAML
         run: cat .github/processed_astro_feature_deployment_template.yaml
