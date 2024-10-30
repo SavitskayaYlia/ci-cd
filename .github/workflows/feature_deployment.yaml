@@ -15,11 +15,14 @@ jobs:
       should-run-next: ${{ steps.condition-check.outputs.run-next }}
     steps:
       # Check conditions to determine if the next steps should run
+      #'astro-dev-insights-core-ae'
       - id: check_conditions
         name: Validate deployment conditions
         run: |
-          current_repo_name=$(echo "${{ github.repository }}" | cut -d'/' -f2)
-          repo_name='ci-cd' #'astro-dev-insights-core-ae'
+          current_repo_name=$(echo "${{ github.repository }}" | cut -d'/' -f2)          
+          repo_name='ci-cd' 
+          echo "The repo name is $repo_name"
+          echo "The branch name is ${{ github.ref }} "
           if [[ "$current_repo_name" == "$repo_name" ]] && [[ "${{ github.ref }}" != 'refs/heads/main' ]] && [[ "${{ github.ref }}" != 'refs/heads/dev' ]]; then
             echo "run-next=true" >> "$GITHUB_OUTPUT"
             echo "Conditions are met."
