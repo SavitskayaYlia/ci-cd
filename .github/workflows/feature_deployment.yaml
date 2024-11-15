@@ -1,6 +1,6 @@
 # test
-name: Create astro feature deployment
-run-name: Create astro feature deployment   
+name: TEst the name Create astro feature deployment
+run-name: TEst the name  RUN Create astro feature deployment   
 on:
   workflow_dispatch:
 
