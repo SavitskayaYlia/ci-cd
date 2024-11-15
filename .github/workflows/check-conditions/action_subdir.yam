@@ -1,0 +1,10 @@
+name: Action sub dir test
+on: 
+  workflow_dispatch:
+
+jobs:
+  check_conditions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check deployment conditions
+        run: echo "TEst sub action"
