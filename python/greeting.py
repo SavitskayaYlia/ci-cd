@@ -4,7 +4,7 @@ class Greeting:
         self.greeting = greeting
     
     def print_message(self):
-        print(f"{self.greeting}, {self.name}!!!!!!! TEST")
+        print(f"{self.greeting}, {self.name}!!!!!!!")
 
 if __name__ == "__main__":
     import sys
